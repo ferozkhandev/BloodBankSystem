@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/barRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Widget.Design.TextInputLayout" parent="AppTheme">
+        <item name="hintTextAppearance">@style/AppTheme.TextFloatLabelAppearance</item>
+        <item name="errorTextAppearance">@style/AppTheme.TextErrorAppearance</item>
+        <item name="counterTextAppearance">@style/TextAppearance.Design.Counter</item>
+        <item name="counterOverflowTextAppearance">@style/TextAppearance.Design.Counter.Overflow</item>
+    </style>
+
+    <style name="AppTheme.TextFloatLabelAppearance" parent="@android:style/TextAppearance">
+        <!-- Floating label appearance here -->
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AppTheme.TextErrorAppearance" parent="@android:style/TextAppearance">
+        <!-- Error message appearance here -->
+        <item name="android:textColor">#ff0000</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+</resources>

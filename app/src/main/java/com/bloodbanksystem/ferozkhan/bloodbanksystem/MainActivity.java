@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        email = (EditText) findViewById(R.id.input_email);
-        password = (EditText) findViewById(R.id.input_password);
-        clickhere = (TextView) findViewById(R.id.link_signup);
+        email = findViewById(R.id.input_email);
+        password = findViewById(R.id.input_password);
+        clickhere = findViewById(R.id.link_signup);
         clickhere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         requestQueue = Volley.newRequestQueue(this);
-        btn_login = (Button) findViewById(R.id.btn_login);
+        btn_login = findViewById(R.id.btn_login);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,13 +65,13 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"Login Error",Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(getApplicationContext(),e.getMessage().toString(),Toast.LENGTH_SHORT).show();;
+                            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Error: "+error.getMessage().toString(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Error: "+error.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 }){
                     @Override

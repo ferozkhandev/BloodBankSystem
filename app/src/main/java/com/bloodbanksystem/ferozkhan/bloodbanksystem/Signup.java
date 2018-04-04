@@ -1,5 +1,6 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,20 +30,19 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Signup extends AppCompatActivity {
+public class Signup extends AppCompatActivity{
     TextView loginlink;
     Button btn_signup;
     private EditText username, email, password;
     private String bloodGroup;
-    private RequestQueue requestQueue;
-    public static final String url = "http://ferozandroidproject.000webhostapp.com/bloodbank/signup.php";
-    private StringRequest stringRequest;
+    private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        requestQueue = Volley.newRequestQueue(this);
+        //Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //Initialize Edit Texts
         username = (EditText) findViewById(R.id.input_name);
@@ -85,42 +89,24 @@ public class Signup extends AppCompatActivity {
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.names().get(0).equals("success"))
-                            {
-                                Toast.makeText(getApplicationContext(),"Signup Succesffully",Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                            else
-                            {
-                                Toast.makeText(getApplicationContext(),"Sigup Error",Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(getApplicationContext(),e.getMessage().toString(),Toast.LENGTH_SHORT).show();;
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Error: "+error.getMessage().toString(),Toast.LENGTH_SHORT).show();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String,String> hashMap = new HashMap<>();
-                        hashMap.put("username", username.getText().toString());
-                        hashMap.put("email", email.getText().toString());
-                        hashMap.put("password", password.getText().toString());
-                        hashMap.put("bloodgroup",bloodGroup);
-                        return hashMap;
-                    }
-                };
-                requestQueue.add(stringRequest);
+                registerUser();
             }
         });
+    }
+    private void registerUser()
+    {
+        firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful())
+                        {
+                            Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),"Could not register",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

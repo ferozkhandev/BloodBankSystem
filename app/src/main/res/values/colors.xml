@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="backPink">#e43f3f</color>
     <color name="barRed">#cc1d1d</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
 </resources>

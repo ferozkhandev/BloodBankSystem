@@ -1,5 +1,7 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.app.ProgressDialog;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -89,13 +91,31 @@ public class Signup extends AppCompatActivity{
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerUser();
+                signup();
             }
         });
     }
-    private void registerUser()
-    {
-        firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
+    public void signup() {
+
+        if (!validate()) {
+            onSignupFailed();
+            return;
+        }
+
+        btn_signup.setEnabled(false);
+
+        final ProgressDialog progressDialog = new ProgressDialog(Signup.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Creating Account...");
+        progressDialog.show();
+
+        String name = username.getText().toString();
+        String emails = email.getText().toString();
+        String passwords = password.getText().toString();
+
+        // TODO: Implement your own signup logic here.
+        firebaseAuth.createUserWithEmailAndPassword(emails,passwords)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -108,5 +128,60 @@ public class Signup extends AppCompatActivity{
                         }
                     }
                 });
+
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onSignupSuccess or onSignupFailed
+                        // depending on success
+                        onSignupSuccess();
+                        // onSignupFailed();
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
+    }
+
+
+    public void onSignupSuccess() {
+        btn_signup.setEnabled(true);
+        setResult(RESULT_OK, null);
+        finish();
+    }
+
+    public void onSignupFailed() {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        btn_signup.setEnabled(true);
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String names = username.getText().toString();
+        String emails = email.getText().toString();
+        String passwords = password.getText().toString();
+
+        if (names.isEmpty() || names.length() < 3) {
+            username.setError("at least 3 characters");
+            valid = false;
+        } else {
+            username.setError(null);
+        }
+
+        if (emails.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emails).matches()) {
+            email.setError("enter a valid email address");
+            valid = false;
+        } else {
+            email.setError(null);
+        }
+
+        if (passwords.isEmpty() || passwords.length() < 4 || passwords.length() > 10) {
+            password.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            password.setError(null);
+        }
+
+        return valid;
     }
 }

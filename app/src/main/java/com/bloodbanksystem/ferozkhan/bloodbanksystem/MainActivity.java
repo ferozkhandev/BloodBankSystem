@@ -1,6 +1,7 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -63,19 +64,74 @@ public class MainActivity extends AppCompatActivity {
     }
     private void login()
     {
+        if (!validate()) {
+            onLoginFailed();
+            return;
+        }
+
+        btn_login.setEnabled(false);
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
+        // TODO: Implement your own authentication logic here.
         firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString())
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful())
-                    {
-                        Toast.makeText(getApplicationContext(),"Login Successfully",Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful())
+                        {
+                            Toast.makeText(getApplicationContext(),"Login Successfully",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(),"Cannot Login",Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(),"Cannot Login",Toast.LENGTH_SHORT).show();
+                });
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        onLoginSuccess();
+                        // onLoginFailed();
+                        progressDialog.dismiss();
                     }
-                }
-            });
+                }, 3000);
+    }
+    public void onLoginSuccess() {
+        btn_login.setEnabled(true);
+    }
+
+    public void onLoginFailed() {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        btn_login.setEnabled(true);
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String emails = email.getText().toString();
+        String passwords = password.getText().toString();
+
+        if (emails.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emails).matches()) {
+            email.setError("enter a valid email address");
+            valid = false;
+        } else {
+            email.setError(null);
+        }
+
+        if (passwords.isEmpty() || password.length() < 4 || password.length() > 10) {
+            password.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            password.setError(null);
+        }
+
+        return valid;
     }
 }

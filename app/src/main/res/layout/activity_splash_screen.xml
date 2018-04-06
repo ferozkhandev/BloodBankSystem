@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backPink"
+    android:background="@color/iron"
     tools:context=".SplashScreen">
 
     <pl.droidsonroids.gif.GifImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="center"
         android:src="@drawable/bloodsplash"
-        android:background="@color/backPink"
         android:visibility="visible" />
 
 </RelativeLayout>

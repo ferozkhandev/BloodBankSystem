@@ -131,7 +131,6 @@ public class SplashScreen extends AppCompatActivity {
                         //Toast.makeText(getApplicationContext(),"Cancel", Toast.LENGTH_SHORT).show();
                     }
                 })
-                
                 .build();
     }
 }

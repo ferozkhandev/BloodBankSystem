@@ -7,4 +7,12 @@
     <color name="barRed">#cc1d1d</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#222222</color>
+    <color name="dark_green">#1e7145</color>
+    <color name="Teal">#00aba9</color>
+    <color name="dark_blue">#2b5797</color>
+    <color name="orange">#e3a21a</color>
+    <color name="dark_red">#ee1111</color>
+    <color name="purple">#7e3878</color>
+    
 </resources>

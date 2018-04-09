@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="3"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            app:srcCompat="@drawable/homeimage" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="5"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_margin="5sp"
+                android:layout_weight="3"
+                android:background="@color/dark_green" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:background="@color/dark_blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:background="@color/Teal" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_margin="5sp"
+                android:layout_weight="1"
+                android:background="@color/purple" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_margin="5sp"
+        android:layout_weight="1"
+        android:background="@color/orange"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center"
+            android:text="Logout"
+            android:textSize="30sp" />
+
+    </LinearLayout>
+</LinearLayout>

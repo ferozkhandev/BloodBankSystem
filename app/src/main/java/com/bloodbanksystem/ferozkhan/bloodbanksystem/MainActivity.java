@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             Intent logged = new Intent(MainActivity.this, Home_Page.class);
                             startActivity(logged);
+                            MainActivity.this.finish();
                         }
                         else
                         {

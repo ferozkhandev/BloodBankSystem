@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
@@ -26,7 +27,16 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         if(isWorkingInternetPersent())
         {
-            splash();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null) {
+                // User is logged in
+                splashAlreadyLogged();
+            }
+            else
+            {
+                splash();
+            }
+
         }
         else
         {
@@ -45,6 +55,22 @@ public class SplashScreen extends AppCompatActivity {
                 } finally {
                     Intent mainIntent = new Intent(SplashScreen.this, MainActivity.class);
                     SplashScreen.this.startActivity(mainIntent);
+                    SplashScreen.this.finish();
+                }
+            }
+        };
+        timerTread.start();
+    }
+    public void splashAlreadyLogged() {
+        Thread timerTread = new Thread() {
+            public void run() {
+                try {
+                    sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    Intent logged = new Intent(SplashScreen.this, Home_Page.class);
+                    SplashScreen.this.startActivity(logged);
                     SplashScreen.this.finish();
                 }
             }

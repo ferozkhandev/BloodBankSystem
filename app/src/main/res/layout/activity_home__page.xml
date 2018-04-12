@@ -45,12 +45,24 @@
                 app:cardUseCompatPadding="true">
 
                 <!-- put whatever you want -->
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-                    android:text="My Account"
-                    android:textSize="36sp" />
+                    android:orientation="vertical">
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/profile_ico"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom|center"
+                        android:text="My Account"
+                        android:layout_weight="3"
+                        android:textSize="30sp" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -81,6 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
                 android:layout_weight="1"
+                android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 app:cardBackgroundColor="@color/Teal"

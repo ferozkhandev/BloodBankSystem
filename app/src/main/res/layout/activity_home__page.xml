@@ -101,12 +101,24 @@
                 app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-                    android:text="Need Blood"
-                    android:textSize="30sp"/>
+                    android:orientation="vertical">
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:src="@drawable/need_blood"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom|center"
+                        android:text="Need Blood"
+                        android:layout_weight="3"
+                        android:textSize="30sp" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView

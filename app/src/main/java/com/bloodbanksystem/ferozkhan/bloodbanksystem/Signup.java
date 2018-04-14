@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,9 +112,9 @@ public class Signup extends AppCompatActivity{
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = username.getText().toString();
-        String emails = email.getText().toString();
-        String passwords = password.getText().toString();
+        final String name = username.getText().toString();
+        final String emails = email.getText().toString();
+        final String passwords = password.getText().toString();
 
         // TODO: Implement your own signup logic here.
         firebaseAuth.createUserWithEmailAndPassword(emails,passwords)
@@ -121,6 +123,13 @@ public class Signup extends AppCompatActivity{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
+                            String user_id = firebaseAuth.getCurrentUser().getUid();
+                            DatabaseReference databaseRefrence = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                            Map map = new HashMap();
+                            map.put("Name",name);
+                            map.put("Email", emails);
+                            map.put("Password", passwords);
+                            databaseRefrence.setValue(map);
                             Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
                         }
                         else {

@@ -14,14 +14,27 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Home_Page extends AppCompatActivity {
-    CardView logout;
+    CardView logout,profile;
     FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home__page);
+
+        //Initialized card views
+        profile = findViewById(R.id.profile);
         logout = findViewById(R.id.logout);
+
         auth = FirebaseAuth.getInstance();
+
+        //Card View Listeners
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home_Page.this, Profile.class);
+                startActivity(intent);
+            }
+        });
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

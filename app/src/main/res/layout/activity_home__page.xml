@@ -34,11 +34,12 @@
             android:layout_weight="1">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
                 android:layout_weight="3"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/dark_green"
                 app:cardCornerRadius="0dp"
                 app:cardElevation="4dp"
@@ -49,18 +50,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/profile_ico"
-                        />
+                        android:src="@drawable/profile_ico" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:gravity="bottom|center"
                         android:text="My Account"
-                        android:layout_weight="3"
                         android:textSize="30sp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>

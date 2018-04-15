@@ -82,7 +82,7 @@
             android:layout_marginTop="5dp"
             android:orientation="vertical">
 
-            <TextView
+            <EditText
                 android:id="@+id/name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -90,10 +90,12 @@
                 android:background="#fff"
                 android:clickable="true"
                 android:elevation="4dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
                 android:padding="20dp"
-                android:text="Name: " />
+                android:hint="Name: " />
 
-            <TextView
+            <EditText
                 android:id="@+id/Age"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -103,10 +105,12 @@
                 android:background="#fff"
                 android:clickable="true"
                 android:elevation="4dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
                 android:padding="20dp"
-                android:text="Age: " />
+                android:hint="Age: " />
 
-            <TextView
+            <EditText
                 android:id="@+id/blood_group"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -116,10 +120,12 @@
                 android:background="#fff"
                 android:clickable="true"
                 android:elevation="4dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
                 android:padding="20dp"
-                android:text="Blood Group: " />
+                android:hint="Blood Group: " />
 
-            <TextView
+            <EditText
                 android:id="@+id/email"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -127,10 +133,12 @@
                 android:background="#fff"
                 android:clickable="true"
                 android:elevation="4dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
                 android:padding="20dp"
-                android:text="Email: " />
+                android:hint="Email: " />
 
-            <TextView
+            <EditText
                 android:id="@+id/contact"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -140,10 +148,12 @@
                 android:background="#fff"
                 android:clickable="true"
                 android:elevation="4dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
                 android:padding="20dp"
-                android:text="Contact: " />
+                android:hint="Contact: " />
 
-            <TextView
+            <EditText
                 android:id="@+id/address"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -152,15 +162,18 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:padding="20dp"
-                android:text="Address: " />
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
+                android:hint="Address: " />
         </LinearLayout>
+
         <Button
-            android:id="@+id/Edit"
+            android:id="@+id/Save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="233dp"
-            android:text="Edit" />
+            android:text="Save" />
     </RelativeLayout>
 </ScrollView>

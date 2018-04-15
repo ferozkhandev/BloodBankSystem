@@ -21,8 +21,10 @@
         <activity android:name=".Signup" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Home_Page" />
-        <activity android:name=".Profile" android:theme="@style/AppTheme.Profile">
-        </activity>
+        <activity
+            android:name=".Profile"
+            android:theme="@style/AppTheme.Profile"></activity>
+        <activity android:name=".EditProfile"></activity>
     </application>
 
 </manifest>

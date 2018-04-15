@@ -1,8 +1,11 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ public class Profile extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private String user_id;
     private FirebaseAuth firebaseAuth;
+    private Button btn_edit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,7 @@ public class Profile extends AppCompatActivity {
         contact = findViewById(R.id.contact);
         displayName = findViewById(R.id.user_profile_name);
         bloodgroup = findViewById(R.id.blood_group);
+        btn_edit = findViewById(R.id.Edit);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user_id = firebaseAuth.getCurrentUser().getUid();
@@ -42,6 +47,9 @@ public class Profile extends AppCompatActivity {
                 displayName.setText((String) dataSnapshot.child("Users").child(user_id).child("Name").getValue());
                 name.setText(("Name: "+dataSnapshot.child("Users").child(user_id).child("Name").getValue()));
                 email.setText(("Email: "+dataSnapshot.child("Users").child(user_id).child("Email").getValue()));
+                age.setText(("Age: "+dataSnapshot.child("Users").child(user_id).child("Age").getValue()));
+                address.setText(("Address: "+dataSnapshot.child("Users").child(user_id).child("Address").getValue()));
+                contact.setText(("Contact: "+dataSnapshot.child("Users").child(user_id).child("Contact").getValue()));
                 bloodgroup.setText(("Blood Group: "+dataSnapshot.child("Users").child(user_id).child("Blood_Group").getValue()));
             }
 
@@ -50,7 +58,13 @@ public class Profile extends AppCompatActivity {
 
             }
         });
-
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Profile.this, EditProfile.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

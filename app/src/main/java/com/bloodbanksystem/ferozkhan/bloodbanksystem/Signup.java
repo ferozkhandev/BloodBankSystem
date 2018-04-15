@@ -129,6 +129,7 @@ public class Signup extends AppCompatActivity{
                             map.put("Name",name);
                             map.put("Email", emails);
                             map.put("Password", passwords);
+                            map.put("Blood_Group",bloodGroup);
                             databaseRefrence.setValue(map);
                             Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
                         }

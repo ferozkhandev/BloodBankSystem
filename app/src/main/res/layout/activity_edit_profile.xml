@@ -165,15 +165,17 @@
                 android:textColor="@color/black"
                 android:textColorHint="#808080"
                 android:hint="Address: " />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/Save"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:elevation="4dp"
+                android:backgroundTint="@color/barRed"
+                android:padding="12dp"
+                android:text="Save" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/Save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="233dp"
-            android:text="Save" />
     </RelativeLayout>
 </ScrollView>

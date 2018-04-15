@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "482334885827-31j6osnt2frjcar5smuvn6feuen55c9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bloodbanksystem.ferozkhan.bloodbanksystem",
+            "certificate_hash": "840b57eced4bdc96829ef7aee3d8fe0dbf470a49"
+          }
+        },
+        {
           "client_id": "482334885827-1b1456mmbodvdc4sfmq68q1ff1tfgio9.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482334885827-1b1456mmbodvdc4sfmq68q1ff1tfgio9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

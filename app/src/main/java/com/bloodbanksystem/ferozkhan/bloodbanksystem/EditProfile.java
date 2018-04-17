@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EditProfile extends AppCompatActivity {
     private EditText name,email,bloodgroup,age,address,contact;
     private TextView displayName;
@@ -50,7 +53,7 @@ public class EditProfile extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private String user_id;
     private Uri filePath;
-    private ImageButton profile_Photo;
+    private CircleImageView profile_Photo;
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private Button btn_save;
@@ -112,7 +115,6 @@ public class EditProfile extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && data != null && data.getData() != null) {
             filePath = data.getData();
-            //Picasso.with
             profile_Photo.setImageURI(filePath);
             uploadFile();
         } else if (data == null)
@@ -126,10 +128,6 @@ public class EditProfile extends AppCompatActivity {
         else if (requestCode != PICK_IMAGE)
         {
             Toast.makeText(getApplicationContext(),"Request code is not equal to pick image",Toast.LENGTH_SHORT).show();
-        }
-        else if(requestCode != RESULT_OK)
-        {
-            Toast.makeText(getApplicationContext(),"Not result ok",Toast.LENGTH_SHORT).show();
         }
         else
         {
@@ -146,7 +144,7 @@ public class EditProfile extends AppCompatActivity {
     {
         if (filePath != null)
         {
-            StorageReference storageReference1 = storageReference.child(System.currentTimeMillis()+"."+
+            StorageReference storageReference1 = storageReference.child(/*System.currentTimeMillis()*/"profile"+"."+
             getFileExtension(filePath));
             storageReference1.putFile(filePath)
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

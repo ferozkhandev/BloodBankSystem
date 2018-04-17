@@ -24,8 +24,13 @@
         <activity android:name=".Home_Page" />
         <activity
             android:name=".Profile"
-            android:theme="@style/AppTheme.Profile"></activity>
-        <activity android:name=".EditProfile"></activity>
+            android:theme="@style/AppTheme.Profile" />
+        <activity android:name=".EditProfile" />
+        <activity
+            android:name=".BloodCompatibility"
+            android:label="@string/title_activity_blood_compatibility"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Need_Blood"></activity>
     </application>
 
 </manifest>

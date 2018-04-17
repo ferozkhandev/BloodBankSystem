@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Home_Page extends AppCompatActivity {
-    CardView logout,profile;
+    CardView logout,profile,blood_compatibilty, need_blood;
     FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,8 @@ public class Home_Page extends AppCompatActivity {
         //Initialized card views
         profile = findViewById(R.id.profile);
         logout = findViewById(R.id.logout);
+        blood_compatibilty = findViewById(R.id.bloodcompatibilty);
+        need_blood = findViewById(R.id.need_blood);
 
         auth = FirebaseAuth.getInstance();
 
@@ -39,6 +41,20 @@ public class Home_Page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setLogout();
+            }
+        });
+        blood_compatibilty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home_Page.this, BloodCompatibility.class);
+                startActivity(intent);
+            }
+        });
+        need_blood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home_Page.this, Need_Blood.class);
+                startActivity(intent);
             }
         });
     }

@@ -11,6 +11,19 @@
         <item>O+</item>
         <item>O-</item>
     </string-array>
+    <string-array name="cities">
+        <item>Rawalpindi</item>
+        <item>Peshawar</item>
+        <item>Mardan</item>
+        <item>Narowal</item>
+        <item>Okara</item>
+        <item>Murree</item>
+        <item>Islamabad</item>
+        <item>Lahore</item>
+        <item>Multan</item>
+        <item>Faisalabad</item>
+        <item>Karachi</item>
+</string-array>
     <string name="title_activity_home__page">Home_Page</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -102,4 +115,5 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_blood_compatibility">BloodCompatibility</string>
 </resources>

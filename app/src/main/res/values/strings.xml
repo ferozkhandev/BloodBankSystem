@@ -42,7 +42,7 @@
         <item>Multan</item>
         <item>Faisalabad</item>
         <item>Karachi</item>
-</string-array>
+    </string-array>
     <string name="title_activity_home__page">Home_Page</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

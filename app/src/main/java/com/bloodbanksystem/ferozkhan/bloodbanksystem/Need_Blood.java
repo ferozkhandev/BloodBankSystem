@@ -1,5 +1,6 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,12 +22,15 @@ public class Need_Blood extends AppCompatActivity {
     private Locale[] locale;
     private ArrayList<String> countries;
     private String country;
+    private Button btn_next;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_need__blood);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        btn_next = findViewById(R.id.btn_next);
 
         locale = Locale.getAvailableLocales();
         countries = new ArrayList<String>();
@@ -53,6 +58,13 @@ public class Need_Blood extends AppCompatActivity {
                             android.R.layout.simple_spinner_item,cities);
                     city.setAdapter(adapter);
                     city.setSelection(0);
+                    btn_next.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(Need_Blood.this,Donors_List.class);
+                            startActivity(intent);
+                        }
+                    });
                 }
                 else
                 {

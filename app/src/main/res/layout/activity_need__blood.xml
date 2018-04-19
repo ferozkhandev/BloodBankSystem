@@ -39,14 +39,15 @@
         android:background="@drawable/spinner_shape" />
 
     <Button
-        android:id="@+id/angry_btn"
+        android:id="@+id/btn_next"
 
-        android:layout_width="152dp"
-        android:layout_height="79dp"
+        android:layout_width="108dp"
+        android:layout_height="44dp"
         android:layout_alignParentEnd="true"
 
         android:layout_alignParentTop="true"
-        android:layout_marginTop="196dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="195dp"
         android:background="@drawable/button_shape"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
@@ -54,5 +55,5 @@
         android:shadowRadius="5"
         android:text="Next"
         android:textColor="#FFFFFF"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 </RelativeLayout>

@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".Donors_List">
+    tools:context=".Donors_List"
+    android:scrollbars="vertical"
+    android:id="@+id/donors_recycler_view"
+    android:background="@color/backPink">
 
-    <ListView
-        android:id="@+id/donors_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ListView>
-
-
-</RelativeLayout>
+</android.support.v7.widget.RecyclerView>

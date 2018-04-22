@@ -7,6 +7,6 @@
     tools:context=".Donors_List"
     android:scrollbars="vertical"
     android:id="@+id/donors_recycler_view"
-    android:background="@color/backPink">
+    android:background="@color/white">
 
 </android.support.v7.widget.RecyclerView>

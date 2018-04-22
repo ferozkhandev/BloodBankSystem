@@ -33,12 +33,12 @@ import java.util.ArrayList;
 public class Donors_List extends AppCompatActivity {
     private static final String TAG = "UserList" ;
     private DatabaseReference userlistReference,emailRefrence;
-    private ArrayList<String> usernamelist;
+    private ArrayList<Donors> usernamelist;
     private ArrayAdapter arrayAdapter;
     private FirebaseAuth firebaseAuth;
     private RecyclerView donorsList;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String email,uid;
+    private String name,email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +66,28 @@ public class Donors_List extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildren() != null)
                 {
-                    usernamelist = new ArrayList<String>();
+                    usernamelist = new ArrayList<Donors>();
                     for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                         if (snapshot.getValue() != null)
                         {
-                            uid = snapshot.getKey();
-                            usernamelist.add(uid);
+                            if (snapshot.child("Name").getValue() != null)
+                            {
+                                name = snapshot.child("Name").getValue().toString();
+                            }
+                            else
+                            {
+                                name = "";
+                            }
+                            if (snapshot.child("Email").getValue()  != null)
+                            {
+                                email = snapshot.child("Email").getValue().toString();
+                            }
+                            else
+                            {
+                                email = "";
+                            }
+                            Donors donors = new Donors(name,email);
+                            usernamelist.add(donors);
                         }
                         usernamelist.remove(usernameOfCurrentUser());
                         Log.i(TAG, "onDataChange: "+usernamelist.toString());

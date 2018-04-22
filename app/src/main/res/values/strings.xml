@@ -12,6 +12,7 @@
         <item>O-</item>
     </string-array>
     <string-array name="cities">
+        <item></item>
         <item>Rawalpindi</item>
         <item>Peshawar</item>
         <item>Mardan</item>

@@ -34,6 +34,7 @@ public class Need_Blood extends AppCompatActivity {
 
         locale = Locale.getAvailableLocales();
         countries = new ArrayList<String>();
+        countries.add("");
         for( Locale loc : locale ){
             country = loc.getDisplayCountry();
             if( country.length() > 0 && !countries.contains(country) ){

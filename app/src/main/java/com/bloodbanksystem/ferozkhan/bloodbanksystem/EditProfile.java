@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -77,6 +78,31 @@ public class EditProfile extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user_id = firebaseAuth.getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+
+        String newString;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                newString= null;
+            } else {
+                displayName.setText(extras.getString("name"));
+                name.setHint("Name");
+                name.setText((extras.getString("name")));
+                email.setHint("Email");
+                email.setText((extras.getString("email")));
+                age.setHint("Age");
+                age.setText((extras.getString("age")));
+                address.setHint("Address");
+                address.setText((extras.getString("address")));
+                contact.setHint("Contact");
+                contact.setText((extras.getString("contact")));
+                bloodgroup.setHint("Blood Group");
+                bloodgroup.setText((extras.getString("blood_Group")));
+            }
+        } else {
+            newString= (String) savedInstanceState.getSerializable("STRING_I_NEED");
+        }
+
 
         profile_Photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,5 +191,14 @@ public class EditProfile extends AppCompatActivity {
         else {
             Toast.makeText(getApplicationContext(),"Not File Selected",Toast.LENGTH_SHORT).show();
         }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

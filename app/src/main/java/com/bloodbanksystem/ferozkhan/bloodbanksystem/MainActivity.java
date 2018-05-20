@@ -22,9 +22,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText email,password;
     private Button btn_login;
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore mFireStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
+        mFireStore = FirebaseFirestore.getInstance();
 
         email = findViewById(R.id.input_email);
         password = findViewById(R.id.input_password);
@@ -84,6 +89,22 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
+                            firebaseAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                @Override
+                                public void onSuccess(GetTokenResult getTokenResult) {
+                                    String token_ID = getTokenResult.getToken();
+                                    String current_ID = firebaseAuth.getCurrentUser().getUid();
+                                    Map<String,Object> tokenMap = new HashMap<>();
+                                    tokenMap.put("Token_ID",token_ID);
+                                    mFireStore.collection("Users").document(current_ID).set(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
+                                }
+                            });
+
                             Intent logged = new Intent(MainActivity.this, Home_Page.class);
                             startActivity(logged);
                             MainActivity.this.finish();

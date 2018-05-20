@@ -33,6 +33,7 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
                 RecyclerView recyclerView = (RecyclerView) view.getParent();
                 CustomViewHolder currentViewHolder = (CustomViewHolder) recyclerView.getChildViewHolder(view);
                 int currentPosition = currentViewHolder.getAdapterPosition();
+
                 Toast.makeText(view.getContext(), currentViewHolder.name.getText(), Toast.LENGTH_LONG).show();
             }
         });

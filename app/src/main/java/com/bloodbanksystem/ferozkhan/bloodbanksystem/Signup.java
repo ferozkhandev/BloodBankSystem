@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -67,7 +68,7 @@ public class Signup extends AppCompatActivity{
                 }
                 catch (Exception ex)
                 {
-                    Toast.makeText(getApplicationContext(),"Error: "+ex.getMessage().toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Error: "+ex.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -193,5 +194,14 @@ public class Signup extends AppCompatActivity{
         }
 
         return valid;
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

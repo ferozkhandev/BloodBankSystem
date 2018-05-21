@@ -12,12 +12,21 @@
     android:paddingRight="24dp"
     android:fitsSystemWindows="true">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/uploadimage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:background="@drawable/profile_circular_border_imageview"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/profile_ico"/>
     <!--  Name Label -->
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
         <EditText android:id="@+id/input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,8 +38,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
         <EditText android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,8 +51,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="6dp">
         <EditText android:id="@+id/input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,14 +67,14 @@
         android:layout_height="40dp"
         android:background="@drawable/spinner_shape"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="4dp"/>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_signup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="20dp"
         android:padding="12dp"
         android:backgroundTint="@color/barRed"
         android:text="Create Account"/>

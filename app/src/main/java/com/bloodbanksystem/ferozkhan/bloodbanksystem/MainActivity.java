@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                                     String current_ID = firebaseAuth.getCurrentUser().getUid();
                                     Map<String,Object> tokenMap = new HashMap<>();
                                     tokenMap.put("Token_ID",token_ID);
-                                    mFireStore.collection("Users").document(current_ID).set(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    mFireStore.collection("Users").document(current_ID).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
 

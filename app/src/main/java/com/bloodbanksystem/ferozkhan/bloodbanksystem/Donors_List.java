@@ -1,6 +1,7 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,8 +45,9 @@ import javax.annotation.Nullable;
 public class Donors_List extends AppCompatActivity {
     private static final String TAG = "UserList" ;
     private FirebaseFirestore userlistFirestore,emailFirestore;
-    private ArrayList<Donors> usernamelist;
+    private List<Donors> usernamelist;
     private ArrayAdapter arrayAdapter;
+    private Context context;
     private FirebaseAuth firebaseAuth;
     private RecyclerView donorsList;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -58,6 +61,10 @@ public class Donors_List extends AppCompatActivity {
         emailFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         donorsList = findViewById(R.id.donors_recycler_view);
+
+        usernamelist = new ArrayList<Donors>();
+        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(getApplicationContext(),usernamelist);
+
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         donorsList.setHasFixedSize(true);
@@ -65,69 +72,48 @@ public class Donors_List extends AppCompatActivity {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         donorsList.setLayoutManager(mLayoutManager);
-
+        donorsList.setAdapter(recyclerViewCustomAdapter);
         onStart();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        /*donors.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildren() != null)
-                {
-                    usernamelist = new ArrayList<Donors>();
-                    for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                        if (snapshot.getValue() != null)
-                        {
-                            if (snapshot.child("Name").getValue() != null)
-                            {
-                                name = snapshot.child("Name").getValue().toString();
-                            }
-                            else
-                            {
-                                name = "";
-                            }
-                            if (snapshot.child("Email").getValue()  != null)
-                            {
-                                email = snapshot.child("Email").getValue().toString();
-                            }
-                            else
-                            {
-                                email = "";
-                            }
-                            Donors donors = new Donors(name,email);
-                            usernamelist.add(donors);
-                        }
-                        usernamelist.remove(usernameOfCurrentUser());
-                        Log.i(TAG, "onDataChange: "+usernamelist.toString());
-
-                        // specify an adapter (see also next example)
-                        donorsList.setAdapter(new RecyclerViewCustomAdapter(usernamelist));
-                    }
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Null",Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-        final ArrayList<Donors> donorList = new ArrayList<>();
-        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(donorList);
-        userlistFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        userlistFirestore.collection("Users").addSnapshotListener(Donors_List.this,new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                usernamelist.clear();
                 for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges())
                 {
                     if(doc.getType() == DocumentChange.Type.ADDED)
                     {
+                        recyclerViewCustomAdapter.notifyDataSetChanged();
                         Donors donors = doc.getDocument().toObject(Donors.class);
-                        donorList.add(donors);
+                        String uuid = doc.getDocument().getId();
+                        String name = doc.getDocument().getData().get("Name").toString();
+                        String email = doc.getDocument().getData().get("Email").toString();
+                        String image = null;
+                        try
+                        {
+                            image = doc.getDocument().getData().get("image").toString();
+                        }
+                        catch (Exception ex)
+                        {
+                            Toast.makeText(getApplicationContext(),ex.getMessage(),Toast.LENGTH_LONG).show();
+                        }
+                        Donors donors1;
+                        if(image != null)
+                        {
+                            donors1 = new Donors(uuid,name,email,image);
+                        }
+                        else
+                        {
+                            donors1 = new Donors(uuid,name,email);
+                        }
+                        if(firebaseAuth.getCurrentUser().getEmail() != email)
+                        {
+                            usernamelist.add(donors1);
+                        }
                     }
                 }
             }

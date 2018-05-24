@@ -58,7 +58,6 @@ public class Profile extends AppCompatActivity{
         firebaseAuth = FirebaseAuth.getInstance();
         user_id = firebaseAuth.getCurrentUser().getUid();
         storageReference = FirebaseStorage.getInstance().getReference().child("Users").child("profile.jpg");
-
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("Users").document(user_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

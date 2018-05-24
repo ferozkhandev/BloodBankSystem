@@ -211,34 +211,54 @@ public class Signup extends AppCompatActivity{
                         {
                             final String user_id = firebaseAuth.getCurrentUser().getUid();
                             StorageReference user_profile_pic = storageReference.child(user_id+".jpg");
-                            user_profile_pic.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                    if(task.isSuccessful())
-                                    {
-                                        String downloadURL = task.getResult().getDownloadUrl().toString();
-                                        Map<String,Object> map = new HashMap();
-                                        map.put("Name",name);
-                                        map.put("Email", emails);
-                                        map.put("Password", passwords);
-                                        map.put("Blood_Group",bloodGroup);
-                                        map.put("image",downloadURL);
-                                        firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Intent intent = new Intent(Signup.this, Home_Page.class);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        });
-                                        Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
+                            if(imageURI != null)
+                            {
+                                user_profile_pic.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                        if(task.isSuccessful())
+                                        {
+                                            String downloadURL = task.getResult().getDownloadUrl().toString();
+                                            Map<String,Object> map = new HashMap();
+                                            map.put("Name",name);
+                                            map.put("Email", emails);
+                                            map.put("Password", passwords);
+                                            map.put("Blood_Group",bloodGroup);
+                                            map.put("image",downloadURL);
+                                            firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Intent intent = new Intent(Signup.this, Home_Page.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            });
+                                            Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(getApplicationContext(),"Error: "+task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                    else
-                                    {
-                                        Toast.makeText(getApplicationContext(),"Error: "+task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                                });
+                            }
+                            else
+                            {
+                                Map<String,Object> map = new HashMap();
+                                map.put("Name",name);
+                                map.put("Email", emails);
+                                map.put("Password", passwords);
+                                map.put("Blood_Group",bloodGroup);
+                                firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Intent intent = new Intent(Signup.this, Home_Page.class);
+                                        startActivity(intent);
+                                        finish();
                                     }
-                                }
-                            });
+                                });
+                                Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
+                            }
 
                         }
                         else {

@@ -31,7 +31,8 @@
             android:label="@string/title_activity_blood_compatibility"
             android:theme="@style/AppTheme" />
         <activity android:name=".Need_Blood" />
-        <activity android:name=".Donors_List"></activity>
+        <activity android:name=".Donors_List" />
+        <activity android:name=".Request_Blood"></activity>
     </application>
 
 </manifest>

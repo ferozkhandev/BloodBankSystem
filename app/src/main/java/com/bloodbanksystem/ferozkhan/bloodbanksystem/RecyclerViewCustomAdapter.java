@@ -1,5 +1,6 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +9,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerViewCustomAdapter.CustomViewHolder>
 {
-    private ArrayList<Donors> data;
+    private Context context;
+    private List<Donors> data;
+    private String uuid;
     public RecyclerViewCustomAdapter()
     {
 
     }
-    public RecyclerViewCustomAdapter(ArrayList<Donors> data)
+    public RecyclerViewCustomAdapter(Context context, List<Donors> data)
     {
+        this.context = context;
         this.data = data;
     }
 
@@ -34,7 +43,7 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
                 CustomViewHolder currentViewHolder = (CustomViewHolder) recyclerView.getChildViewHolder(view);
                 int currentPosition = currentViewHolder.getAdapterPosition();
 
-                Toast.makeText(view.getContext(), currentViewHolder.name.getText(), Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(), data.get(currentPosition).getUuid(), Toast.LENGTH_SHORT).show();
             }
         });
         return new CustomViewHolder(view);
@@ -44,25 +53,40 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         String name = (String) data.get(position).getName();
         String email = (String) data.get(position).getEmail();
+        String image = data.get(position).getImage();
+        uuid = data.get(position).getUuid();
         holder.name.setText(name);
         holder.email.setText(email);
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        if(image != null)
+        {
+            Glide.with(context)
+                    .load(image)
+                    .into(holder.profilePic);
+        }
+        /*holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(v.getContext(), uuid, Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        if(data == null)
+        {
+            return 5;
+        }
+        else
+        {
+            return data.size();
+        }
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
-        private ImageView profilePic;
+        private CircleImageView profilePic;
         private TextView name;
         private TextView email;
         public CustomViewHolder(View itemView) {

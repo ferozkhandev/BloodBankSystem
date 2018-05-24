@@ -42,11 +42,16 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
-
         String name = (String) data.get(position).getName();
         String email = (String) data.get(position).getEmail();
         holder.name.setText(name);
         holder.email.setText(email);
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -56,6 +61,7 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class CustomViewHolder extends RecyclerView.ViewHolder
     {
+        View mView;
         private ImageView profilePic;
         private TextView name;
         private TextView email;

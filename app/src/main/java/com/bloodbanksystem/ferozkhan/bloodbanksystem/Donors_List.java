@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,26 +27,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 public class Donors_List extends AppCompatActivity {
     private static final String TAG = "UserList" ;
-    private DatabaseReference userlistReference,emailRefrence;
+    private FirebaseFirestore userlistFirestore,emailFirestore;
     private ArrayList<Donors> usernamelist;
     private ArrayAdapter arrayAdapter;
     private FirebaseAuth firebaseAuth;
     private RecyclerView donorsList;
     private RecyclerView.LayoutManager mLayoutManager;
     private String name,email;
+    private RecyclerViewCustomAdapter recyclerViewCustomAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donors__list);
-        userlistReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        emailRefrence = FirebaseDatabase.getInstance().getReference();
+        userlistFirestore = FirebaseFirestore.getInstance();
+        emailFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         donorsList = findViewById(R.id.donors_recycler_view);
         // use this setting to improve performance if you know that changes
@@ -60,8 +71,7 @@ public class Donors_List extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Query donors = userlistReference.orderByChild("Email");
-        donors.addValueEventListener(new ValueEventListener() {
+        /*donors.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildren() != null)
@@ -105,6 +115,21 @@ public class Donors_List extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });*/
+        final ArrayList<Donors> donorList = new ArrayList<>();
+        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(donorList);
+        userlistFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges())
+                {
+                    if(doc.getType() == DocumentChange.Type.ADDED)
+                    {
+                        Donors donors = doc.getDocument().toObject(Donors.class);
+                        donorList.add(donors);
+                    }
+                }
             }
         });
     }

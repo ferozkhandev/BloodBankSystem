@@ -1,6 +1,8 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -28,9 +32,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Profile extends AppCompatActivity{
     private TextView name,email,bloodgroup,age,address,contact, displayName;
-    private String sname,semail,sbloodgroup,sage,saddress,scontact, sdisplayName;
+    private String sname,semail,sbloodgroup,sage,saddress,scontact,sUserImage;
     private ProfileAttribs profileAttribs;
-    private DatabaseReference databaseReference;
+    private FirebaseFirestore firebaseFirestore;
     private CircleImageView profilePic;
     private StorageReference storageReference;
     private String user_id;
@@ -40,6 +44,7 @@ public class Profile extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        loading();
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         age = findViewById(R.id.Age);
@@ -53,22 +58,22 @@ public class Profile extends AppCompatActivity{
         firebaseAuth = FirebaseAuth.getInstance();
         user_id = firebaseAuth.getCurrentUser().getUid();
         storageReference = FirebaseStorage.getInstance().getReference().child("Users").child("profile.jpg");
-        Glide.with(Profile.this)
-                .using(new FirebaseImageLoader())
-                .load(storageReference)
-                .into(profilePic);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("Users").document(user_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                sname = (String) dataSnapshot.child("Users").child(user_id).child("Name").getValue();
-                semail = (String) dataSnapshot.child("Users").child(user_id).child("Email").getValue();
-                sage = (String) dataSnapshot.child("Users").child(user_id).child("Age").getValue();
-                saddress = (String) dataSnapshot.child("Users").child(user_id).child("Address").getValue();
-                scontact = (String) dataSnapshot.child("Users").child(user_id).child("Contact").getValue();
-                sbloodgroup = (String) dataSnapshot.child("Users").child(user_id).child("Blood_Group").getValue();
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                sname = documentSnapshot.getString("Name");
+                sUserImage = documentSnapshot.getString("image");
+                semail = documentSnapshot.getString("Email");
+                sage = documentSnapshot.getString("Age");
+                saddress = documentSnapshot.getString("Address");
+                scontact = documentSnapshot.getString("Contact");
+                sbloodgroup = documentSnapshot.getString("Blood_Group");
 
+                Glide.with(Profile.this)
+                        .load(sUserImage)
+                        .into(profilePic);
                 displayName.setText(sname);
                 name.setText(("Name: "+sname));
                 email.setText(("Email: "+semail));
@@ -77,12 +82,8 @@ public class Profile extends AppCompatActivity{
                 contact.setText(("Contact: "+scontact));
                 bloodgroup.setText(("Blood Group: "+sbloodgroup));
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
         });
+
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,8 +95,27 @@ public class Profile extends AppCompatActivity{
                 intent.putExtra("contact",scontact);
                 intent.putExtra("blood_Group",sbloodgroup);
                 startActivity(intent);
+                finish();
             }
         });
+    }
+
+    private void loading()
+    {
+        final ProgressDialog progressDialog = new ProgressDialog(Profile.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onSignupSuccess or onSignupFailed
+                        // depending on success
+                        // onSignupFailed();
+                        progressDialog.dismiss();
+                    }
+                }, 4000);
     }
 
     @Override

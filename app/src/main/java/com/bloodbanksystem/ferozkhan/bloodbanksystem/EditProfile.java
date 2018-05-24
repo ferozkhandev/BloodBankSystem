@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,14 +23,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -50,9 +54,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditProfile extends AppCompatActivity {
     private EditText name,email,bloodgroup,age,address,contact;
     private TextView displayName;
-    private ProfileAttribs profileAttribs;
-    private DatabaseReference databaseReference;
-    private String user_id;
+    private FirebaseFirestore firebaseFirestore;
+    private String user_id,downloadURL;
     private Uri filePath;
     private CircleImageView profile_Photo;
     private FirebaseAuth firebaseAuth;
@@ -74,10 +77,20 @@ public class EditProfile extends AppCompatActivity {
         btn_save = findViewById(R.id.Save);
         displayName = findViewById(R.id.user_profile_name);
 
+        downloadURL = "";
+        user_id = "";
         storageReference = FirebaseStorage.getInstance().getReference("Users");
         firebaseAuth = FirebaseAuth.getInstance();
-        user_id = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+        try
+        {
+            user_id = firebaseAuth.getCurrentUser().getUid();
+        }
+        catch (NullPointerException ex)
+        {
+            Toast.makeText(getApplicationContext(),"Error: "+ex.getMessage(),Toast.LENGTH_LONG);
+        }
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
 
         String newString;
         if (savedInstanceState == null) {
@@ -114,17 +127,7 @@ public class EditProfile extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Map map = new HashMap();
-                map.put("Name",name.getText().toString());
-                map.put("Age", age.getText().toString());
-                map.put("Email", email.getText().toString());
-                map.put("Blood_Group",bloodgroup.getText().toString());
-                map.put("Contact", contact.getText().toString());
-                map.put("Address", address.getText().toString());
-                //uploadFile();
-                databaseReference.setValue(map);
-                Toast.makeText(getApplicationContext(),"Edited Successfully",Toast.LENGTH_SHORT).show();
-                finish();
+                editProfile();
             }
         });
     }
@@ -142,7 +145,6 @@ public class EditProfile extends AppCompatActivity {
         if (requestCode == PICK_IMAGE && data != null && data.getData() != null) {
             filePath = data.getData();
             profile_Photo.setImageURI(filePath);
-            uploadFile();
         } else if (data == null)
         {
             Toast.makeText(getApplicationContext(),"Data is null",Toast.LENGTH_SHORT).show();
@@ -160,43 +162,100 @@ public class EditProfile extends AppCompatActivity {
             Log.e("Error","Error");
         }
     }
-    private String getFileExtension(Uri uri)
+    private void editProfile()
     {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-    private void uploadFile()
-    {
-        if (filePath != null)
-        {
-            StorageReference storageReference1 = storageReference.child(/*System.currentTimeMillis()*/"profile"+"."+
-            getFileExtension(filePath));
-            storageReference1.putFile(filePath)
-            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Upload_Image upload_image = new Upload_Image(taskSnapshot.getDownloadUrl().toString());
-                    String uploadID = databaseReference.push().getKey();
-                    databaseReference.child(uploadID).setValue(upload_image);
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
+        btn_save.setEnabled(false);
 
+        final ProgressDialog progressDialog = new ProgressDialog(EditProfile.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Editing Account...");
+        progressDialog.show();
+
+        final String names = name.getText().toString();
+        final String emails = email.getText().toString();
+        final String bloodGroup = bloodgroup.getText().toString();
+        final String ages = age.getText().toString();
+        final String addresses = address.getText().toString();
+        final String contacts = contact.getText().toString();
+
+        if(filePath != null)
+        {
+            final String user_id = firebaseAuth.getCurrentUser().getUid();
+            StorageReference user_profile_pic = storageReference.child(user_id+".jpg");
+            user_profile_pic.putFile(filePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(task.isSuccessful())
+                    {
+                        String downloadURL = task.getResult().getDownloadUrl().toString();
+                        Map<String,Object> map = new HashMap();
+                        map.put("Name",names);
+                        map.put("Email", emails);
+                        map.put("Age", ages);
+                        map.put("Blood_Group",bloodGroup);
+                        map.put("Address",addresses);
+                        map.put("Contact",contacts);
+                        map.put("image",downloadURL);
+                        firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(getApplicationContext(),"Edited Successfully",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(EditProfile.this, Profile.class);
+                                startActivity(intent);
+                                //finish();
+                            }
+                        });
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Error: "+task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
-        else {
-            Toast.makeText(getApplicationContext(),"Not File Selected",Toast.LENGTH_SHORT).show();
+        else
+        {
+            Map<String,Object> map = new HashMap();
+            map.put("Name",names);
+            map.put("Email", emails);
+            map.put("Age", ages);
+            map.put("Blood_Group",bloodGroup);
+            map.put("Address",addresses);
+            map.put("Contact",contacts);
+            firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(getApplicationContext(),"Edited Successfully",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EditProfile.this, Profile.class);
+                    startActivity(intent);
+                    //finish();
+                }
+            });
         }
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onSignupSuccess or onSignupFailed
+                        // depending on success
+                        onEditSuccess();
+                        // onSignupFailed();
+                        progressDialog.dismiss();
+                    }
+                }, 15000);
+    }
+    public void onEditSuccess() {
+        btn_save.setEnabled(true);
+        setResult(RESULT_OK, null);
+        EditProfile.this.finish();
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK))
         {
+            Intent intent = new Intent(EditProfile.this, Profile.class);
+            startActivity(intent);
             finish();
         }
         return super.onKeyDown(keyCode, event);

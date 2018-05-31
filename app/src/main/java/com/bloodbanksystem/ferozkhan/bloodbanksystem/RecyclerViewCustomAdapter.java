@@ -1,6 +1,7 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public CustomViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.recyclerview_data,parent,false);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,8 +43,9 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
                 RecyclerView recyclerView = (RecyclerView) view.getParent();
                 CustomViewHolder currentViewHolder = (CustomViewHolder) recyclerView.getChildViewHolder(view);
                 int currentPosition = currentViewHolder.getAdapterPosition();
-
-                Toast.makeText(view.getContext(), data.get(currentPosition).getUuid(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context,Request_Blood.class);
+                intent.putExtra("UUID",data.get(currentPosition).getUuid());
+                context.startActivity(intent);
             }
         });
         return new CustomViewHolder(view);

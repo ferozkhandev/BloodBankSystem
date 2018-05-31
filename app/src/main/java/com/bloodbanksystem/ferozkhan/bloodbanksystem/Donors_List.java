@@ -63,7 +63,7 @@ public class Donors_List extends AppCompatActivity {
         donorsList = findViewById(R.id.donors_recycler_view);
 
         usernamelist = new ArrayList<Donors>();
-        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(getApplicationContext(),usernamelist);
+        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(Donors_List.this,usernamelist);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

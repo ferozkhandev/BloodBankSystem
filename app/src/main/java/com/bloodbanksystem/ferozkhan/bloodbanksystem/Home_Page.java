@@ -1,5 +1,6 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +11,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Home_Page extends AppCompatActivity {
-    CardView logout,profile,blood_compatibilty, need_blood;
-    FirebaseAuth auth;
+    private CardView logout,profile,blood_compatibilty, need_blood;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firebaseFirestore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +36,7 @@ public class Home_Page extends AppCompatActivity {
         need_blood = findViewById(R.id.need_blood);
 
         auth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         //Card View Listeners
         profile.setOnClickListener(new View.OnClickListener() {
@@ -40,7 +49,15 @@ public class Home_Page extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setLogout();
+                logout.setEnabled(false);
+                Map<String,Object> tokenRemoveMap = new HashMap<>();
+                tokenRemoveMap.put("Token_ID", FieldValue.delete());
+                firebaseFirestore.collection("Users").document(auth.getUid()).update(tokenRemoveMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        setLogout();
+                    }
+                });
             }
         });
         blood_compatibilty.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +104,5 @@ public class Home_Page extends AppCompatActivity {
             }
         };
         authListener.onAuthStateChanged(auth);
-
     }
 }

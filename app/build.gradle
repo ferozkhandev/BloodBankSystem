@@ -29,6 +29,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:15.0.2'
     implementation 'com.google.firebase:firebase-auth:15.1.0'
     implementation 'com.google.firebase:firebase-storage:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.10'
     implementation 'com.github.meesnakhan:FancyAlertDialog-Android:0.1'
     implementation 'com.android.support:cardview-v7:27.1.1'

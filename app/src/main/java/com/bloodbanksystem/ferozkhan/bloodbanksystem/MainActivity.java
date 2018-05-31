@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,25 +90,18 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
-                            firebaseAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                            String token_ID = FirebaseInstanceId.getInstance().getToken();
+                            String current_ID = firebaseAuth.getCurrentUser().getUid();
+                            Map<String,Object> tokenMap = new HashMap<>();
+                            tokenMap.put("Token_ID",token_ID);
+                            mFireStore.collection("Users").document(current_ID).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
-                                public void onSuccess(GetTokenResult getTokenResult) {
-                                    String token_ID = getTokenResult.getToken();
-                                    String current_ID = firebaseAuth.getCurrentUser().getUid();
-                                    Map<String,Object> tokenMap = new HashMap<>();
-                                    tokenMap.put("Token_ID",token_ID);
-                                    mFireStore.collection("Users").document(current_ID).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-
-                                        }
+                                public void onSuccess(Void aVoid) {
+                                    Intent logged = new Intent(MainActivity.this, Home_Page.class);
+                                    startActivity(logged);
+                                    MainActivity.this.finish();
+                                    }
                                     });
-                                }
-                            });
-
-                            Intent logged = new Intent(MainActivity.this, Home_Page.class);
-                            startActivity(logged);
-                            MainActivity.this.finish();
                         }
                         else
                         {
@@ -124,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 5000);
     }
     public void onLoginSuccess() {
         btn_login.setEnabled(true);

@@ -15,11 +15,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +55,9 @@ import java.util.UUID;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfile extends AppCompatActivity {
-    private EditText name,email,bloodgroup,age,address,contact;
+    private EditText name,email,age,address,contact;
     private TextView displayName;
+    private String bloodgroup;
     private FirebaseFirestore firebaseFirestore;
     private String user_id,downloadURL;
     private Uri filePath;
@@ -73,9 +77,33 @@ public class EditProfile extends AppCompatActivity {
         age = findViewById(R.id.Age);
         address = findViewById(R.id.address);
         contact = findViewById(R.id.contact);
-        bloodgroup = findViewById(R.id.blood_group);
         btn_save = findViewById(R.id.Save);
         displayName = findViewById(R.id.user_profile_name);
+
+        final Spinner spinner = findViewById(R.id.blood_group);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.blood_group, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                try
+                {
+                    bloodgroup = spinner.getSelectedItem().toString();
+                }
+                catch (Exception ex)
+                {
+                    Toast.makeText(getApplicationContext(),"Error: "+ex.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
 
         downloadURL = "";
         user_id = "";
@@ -109,8 +137,6 @@ public class EditProfile extends AppCompatActivity {
                 address.setText((extras.getString("address")));
                 contact.setHint("Contact");
                 contact.setText((extras.getString("contact")));
-                bloodgroup.setHint("Blood Group");
-                bloodgroup.setText((extras.getString("blood_Group")));
             }
         } else {
             newString= (String) savedInstanceState.getSerializable("STRING_I_NEED");
@@ -174,7 +200,7 @@ public class EditProfile extends AppCompatActivity {
 
         final String names = name.getText().toString();
         final String emails = email.getText().toString();
-        final String bloodGroup = bloodgroup.getText().toString();
+        final String bloodGroup = bloodgroup;
         final String ages = age.getText().toString();
         final String addresses = address.getText().toString();
         final String contacts = contact.getText().toString();
@@ -248,6 +274,36 @@ public class EditProfile extends AppCompatActivity {
         btn_save.setEnabled(true);
         setResult(RESULT_OK, null);
         EditProfile.this.finish();
+    }
+    public boolean validate() {
+        boolean valid = true;
+
+        String names = name.getText().toString();
+        String emails = email.getText().toString();
+        String ages = age.getText().toString();
+
+        if (names.isEmpty() || names.length() < 3) {
+            name.setError("At least 3 characters");
+            valid = false;
+        } else {
+            name.setError(null);
+        }
+
+        if (emails.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emails).matches()) {
+            email.setError("Enter a valid email address");
+            valid = false;
+        } else {
+            email.setError(null);
+        }
+
+        if (ages.isEmpty() || Integer.parseInt(age.getText().toString()) < 0) {
+            age.setError("Please enter a valid age.");
+            valid = false;
+        } else {
+            age.setError(null);
+        }
+
+        return valid;
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)

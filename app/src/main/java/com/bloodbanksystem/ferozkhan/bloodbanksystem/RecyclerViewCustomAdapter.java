@@ -44,7 +44,9 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
                 CustomViewHolder currentViewHolder = (CustomViewHolder) recyclerView.getChildViewHolder(view);
                 int currentPosition = currentViewHolder.getAdapterPosition();
                 Intent intent = new Intent(context,Request_Blood.class);
+                intent.putExtra("name",data.get(currentPosition).getName());
                 intent.putExtra("UUID",data.get(currentPosition).getUuid());
+                intent.putExtra("bloodgroup",data.get(currentPosition).getBloodGroup());
                 context.startActivity(intent);
             }
         });

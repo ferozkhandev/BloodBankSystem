@@ -5,10 +5,14 @@ public class Donors {
     private String name;
     private String email;
     private String image;
+    private String bloodGroup;
     public Donors()
     {
         this.name = null;
         this.email = null;
+        this.image = null;
+        this.uuid = null;
+        this.bloodGroup = null;
     }
     public Donors(String uuid)
     {
@@ -21,20 +25,31 @@ public class Donors {
     {
         this.uuid = uuid;
         this.name = name;
+        this.bloodGroup = null;
         this.email = null;
         this.image = null;
     }
-    public Donors(String uuid, String name, String email)
+    public Donors(String uuid, String name,String bloodGroup)
     {
         this.uuid = uuid;
         this.name = name;
+        this.bloodGroup = bloodGroup;
+        this.email = null;
+        this.image = null;
+    }
+    public Donors(String uuid, String name, String bloodGroup, String email)
+    {
+        this.uuid = uuid;
+        this.name = name;
+        this.bloodGroup = bloodGroup;
         this.email = email;
         this.image = null;
     }
-    public Donors(String uuid, String name,String email, String image)
+    public Donors(String uuid, String name, String bloodGroup, String email, String image)
     {
         this.uuid = uuid;
         this.name = name;
+        this.bloodGroup = bloodGroup;
         this.email = email;
         this.image = image;
     }
@@ -55,6 +70,10 @@ public class Donors {
         this.uuid = uuid;
     }
 
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
     public String getImage() {
         return image;
     }
@@ -65,6 +84,10 @@ public class Donors {
 
     public String getName() {
         return name;
+    }
+
+    public String getBloodGroup() {
+        return bloodGroup;
     }
 
     public String getEmail() {

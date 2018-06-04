@@ -59,8 +59,9 @@ public class EditProfile extends AppCompatActivity {
     private TextView displayName;
     private String bloodgroup;
     private FirebaseFirestore firebaseFirestore;
-    private String user_id,downloadURL;
+    private String user_id,downloadURL,bloodgroups[];
     private Uri filePath;
+    private Spinner spinner;
     private CircleImageView profile_Photo;
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
@@ -79,8 +80,9 @@ public class EditProfile extends AppCompatActivity {
         contact = findViewById(R.id.contact);
         btn_save = findViewById(R.id.Save);
         displayName = findViewById(R.id.user_profile_name);
+        bloodgroups = getResources().getStringArray(R.array.blood_group);
 
-        final Spinner spinner = findViewById(R.id.blood_group);
+        spinner = findViewById(R.id.blood_group);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.blood_group, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -133,6 +135,13 @@ public class EditProfile extends AppCompatActivity {
                 email.setText((extras.getString("email")));
                 age.setHint("Age");
                 age.setText((extras.getString("age")));
+                for (int i=0; i<bloodgroups.length; i++)
+                {
+                    if(bloodgroups[i].equals(extras.getString("blood_Group")))
+                    {
+                        spinner.setSelection(i);
+                    }
+                }
                 address.setHint("Address");
                 address.setText((extras.getString("address")));
                 contact.setHint("Contact");
@@ -188,8 +197,13 @@ public class EditProfile extends AppCompatActivity {
             Log.e("Error","Error");
         }
     }
+
     private void editProfile()
     {
+        if (!validate()) {
+            onEditFailed();
+            return;
+        }
         btn_save.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(EditProfile.this,
@@ -275,12 +289,19 @@ public class EditProfile extends AppCompatActivity {
         setResult(RESULT_OK, null);
         EditProfile.this.finish();
     }
+    public void onEditFailed() {
+        Toast.makeText(getBaseContext(), "Edit failed", Toast.LENGTH_LONG).show();
+
+        btn_save.setEnabled(true);
+    }
     public boolean validate() {
         boolean valid = true;
 
         String names = name.getText().toString();
         String emails = email.getText().toString();
         String ages = age.getText().toString();
+        String contacts = contact.getText().toString();
+        ages = ages.replaceAll("[^0-9.]", "");
 
         if (names.isEmpty() || names.length() < 3) {
             name.setError("At least 3 characters");
@@ -296,7 +317,14 @@ public class EditProfile extends AppCompatActivity {
             email.setError(null);
         }
 
-        if (ages.isEmpty() || Integer.parseInt(age.getText().toString()) < 0) {
+        if (contacts.isEmpty() || contacts.length() < 11 || contacts.length() > 14) {
+            contact.setError("Please enter a valid Phone Number");
+            valid = false;
+        } else {
+            contact.setError(null);
+        }
+
+        if (ages.isEmpty() || Integer.parseInt(ages) < 0) {
             age.setError("Please enter a valid age.");
             valid = false;
         } else {

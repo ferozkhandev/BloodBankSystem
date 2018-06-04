@@ -33,7 +33,7 @@ public class Request_Blood extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private CircleImageView profilePic;
     private StorageReference storageReference;
-    private String user_id;
+    private String user_id,intentbloudgroup;
     private FirebaseAuth firebaseAuth;
     private Button btn_Request;
     @Override
@@ -54,6 +54,7 @@ public class Request_Blood extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         mCrrentID = FirebaseAuth.getInstance().getUid();
         user_id = getIntent().getStringExtra("UUID");
+        intentbloudgroup = getIntent().getStringExtra("bloodgroup");
         storageReference = FirebaseStorage.getInstance().getReference().child("Users").child("profile.jpg");
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("Users").document(user_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -83,7 +84,7 @@ public class Request_Blood extends AppCompatActivity {
         btn_Request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = "Hey Give me blood";
+                String message = intentbloudgroup+" blood is required.";
                 if(!TextUtils.isEmpty(message))
                 {
                     Map<String, Object> notificationMessage = new HashMap<>();

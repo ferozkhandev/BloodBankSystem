@@ -91,6 +91,7 @@ public class Donors_List extends AppCompatActivity {
                         Donors donors = doc.getDocument().toObject(Donors.class);
                         String uuid = doc.getDocument().getId();
                         String name = doc.getDocument().getData().get("Name").toString();
+                        String bloodGroup = doc.getDocument().getData().get("Blood_Group").toString();
                         String email = doc.getDocument().getData().get("Email").toString();
                         String image = null;
                         try
@@ -104,11 +105,11 @@ public class Donors_List extends AppCompatActivity {
                         Donors donors1;
                         if(image != null)
                         {
-                            donors1 = new Donors(uuid,name,email,image);
+                            donors1 = new Donors(uuid,name,bloodGroup, email,image);
                         }
                         else
                         {
-                            donors1 = new Donors(uuid,name,email);
+                            donors1 = new Donors(uuid,name, bloodGroup,email);
                         }
                         if(firebaseAuth.getCurrentUser().getEmail() != email)
                         {

@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -218,11 +219,13 @@ public class Signup extends AppCompatActivity{
                                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                         if(task.isSuccessful())
                                         {
+                                            String token_ID = FirebaseInstanceId.getInstance().getToken();
                                             String downloadURL = task.getResult().getDownloadUrl().toString();
                                             Map<String,Object> map = new HashMap();
                                             map.put("Name",name);
                                             map.put("Email", emails);
                                             map.put("Password", passwords);
+                                            map.put("Token_ID",token_ID);
                                             map.put("Blood_Group",bloodGroup);
                                             map.put("image",downloadURL);
                                             firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {

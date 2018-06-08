@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -28,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Request_Blood extends AppCompatActivity {
     private TextView name,email,bloodgroup,age,address,contact, displayName;
-    private String sname,semail,sbloodgroup,sage,saddress,scontact,sUserImage, mCrrentID;
+    private String sname,semail,sbloodgroup,sage,saddress,scontact,sUserImage, mCrrentID,targetTokenID;
     private ProfileAttribs profileAttribs;
     private FirebaseFirestore firebaseFirestore;
     private CircleImageView profilePic;
@@ -36,6 +37,7 @@ public class Request_Blood extends AppCompatActivity {
     private String user_id,intentbloudgroup;
     private FirebaseAuth firebaseAuth;
     private Button btn_Request;
+    private String longitude,latitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +52,27 @@ public class Request_Blood extends AppCompatActivity {
         bloodgroup = findViewById(R.id.d_blood_group);
         btn_Request = findViewById(R.id.requestBlood);
         profilePic = findViewById(R.id.donor_profile_photo);
-
+        /*MyLocationClass myLocationClass = new MyLocationClass();
+        if(myLocationClass.location.getLongitude() != 0 && myLocationClass.location.getLatitude() != 0)
+        {
+            longitude = String.valueOf(myLocationClass.location.getLongitude());
+            latitude = String.valueOf(myLocationClass.location.getLatitude());
+        }
+        else
+        {
+            myLocationClass.location.setLongitude(21);
+            myLocationClass.location.setLatitude(21);
+            longitude = String.valueOf(myLocationClass.location.getLongitude());
+            latitude = String.valueOf(myLocationClass.location.getLatitude());
+        }*/
+        longitude = "21.0";
+        latitude = "31.0";
         firebaseAuth = FirebaseAuth.getInstance();
+        //User ID
         mCrrentID = FirebaseAuth.getInstance().getUid();
+        //Target User ID
         user_id = getIntent().getStringExtra("UUID");
+
         intentbloudgroup = getIntent().getStringExtra("bloodgroup");
         storageReference = FirebaseStorage.getInstance().getReference().child("Users").child("profile.jpg");
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -90,13 +109,14 @@ public class Request_Blood extends AppCompatActivity {
                     Map<String, Object> notificationMessage = new HashMap<>();
                     notificationMessage.put("Message",message);
                     notificationMessage.put("from",mCrrentID);
+                    notificationMessage.put("longitude", longitude);
+                    notificationMessage.put("latitude", latitude);
                     firebaseFirestore.collection("Users/"+user_id+"/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             Toast.makeText(getApplicationContext(),"Request Sent",Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
             }
         });

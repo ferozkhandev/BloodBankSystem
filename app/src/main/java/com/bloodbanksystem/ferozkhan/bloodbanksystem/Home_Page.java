@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Home_Page extends AppCompatActivity {
-    private CardView logout,profile,blood_compatibilty, need_blood;
+    private CardView logout,profile,blood_compatibilty, need_blood,donate_blood;
     private FirebaseAuth auth;
     private FirebaseFirestore firebaseFirestore;
     @Override
@@ -34,6 +34,7 @@ public class Home_Page extends AppCompatActivity {
         logout = findViewById(R.id.logout);
         blood_compatibilty = findViewById(R.id.bloodcompatibilty);
         need_blood = findViewById(R.id.need_blood);
+        donate_blood = findViewById(R.id.donate_blood);
 
         auth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -71,6 +72,14 @@ public class Home_Page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home_Page.this, Need_Blood.class);
+                startActivity(intent);
+            }
+        });
+
+        donate_blood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Home_Page.this, Donate_Blood.class);
                 startActivity(intent);
             }
         });

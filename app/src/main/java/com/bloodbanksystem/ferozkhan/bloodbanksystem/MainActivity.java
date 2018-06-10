@@ -115,13 +115,13 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
                         onLoginSuccess();
-                        // onLoginFailed();
+                        //onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 5000);
+                }, 3000);
     }
     public void onLoginSuccess() {
-        btn_login.setEnabled(true);
+        btn_login.setEnabled(false);
     }
 
     public void onLoginFailed() {

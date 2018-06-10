@@ -15,7 +15,9 @@ import java.util.Map;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -50,8 +52,9 @@ public class Donors_List extends AppCompatActivity {
     private Context context;
     private FirebaseAuth firebaseAuth;
     private RecyclerView donorsList;
+    private ImageView emptyView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String name,email;
+    private String cBloodgroup,userID;
     private RecyclerViewCustomAdapter recyclerViewCustomAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class Donors_List extends AppCompatActivity {
         emailFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         donorsList = findViewById(R.id.donors_recycler_view);
+        emptyView = findViewById(R.id.empty_view);
+        userID = firebaseAuth.getUid();
 
         usernamelist = new ArrayList<Donors>();
         recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(Donors_List.this,usernamelist);
@@ -88,7 +93,7 @@ public class Donors_List extends AppCompatActivity {
                     if(doc.getType() == DocumentChange.Type.ADDED)
                     {
                         recyclerViewCustomAdapter.notifyDataSetChanged();
-                        Donors donors = doc.getDocument().toObject(Donors.class);
+                        //Donors donors = doc.getDocument().toObject(Donors.class);
                         String uuid = doc.getDocument().getId();
                         String name = doc.getDocument().getData().get("Name").toString();
                         String bloodGroup = doc.getDocument().getData().get("Blood_Group").toString();
@@ -111,71 +116,25 @@ public class Donors_List extends AppCompatActivity {
                         {
                             donors1 = new Donors(uuid,name, bloodGroup,email);
                         }
-                        if(firebaseAuth.getCurrentUser().getEmail() != email)
+                        if(!firebaseAuth.getCurrentUser().getEmail().equals(email) && getIntent().getStringExtra("bloodgroup").equals(bloodGroup))
                         {
                             usernamelist.add(donors1);
                         }
                     }
                 }
+                if (usernamelist.isEmpty()) {
+                    donorsList.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                    Toast.makeText(getApplicationContext(),"No Donor available there",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    donorsList.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
             }
         });
     }
 
-
-    public String usernameOfCurrentUser()
-    {
-        String email = firebaseAuth.getCurrentUser().getEmail();
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        }
-        else
-        {
-            return email;
-        }
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // Remove post value event listener
-//        if (mUserListListener != null) {
-//            userlistReference.removeEventListener(mUserListListener);
-//        }
-    }
-    private ArrayList<String> collectEmails(Map<String,Object> donors) {
-
-    ArrayList<String> emails = new ArrayList<>();
-
-    //iterate through each user, ignoring their UID
-    for (Map.Entry<String, Object> entry : donors.entrySet()){
-
-        //Get user map
-        Map singleUser = (Map) entry.getValue();
-        //Get phone field and append to list
-        emails.add((String) singleUser.get("Email"));
-    }
-
-    return emails;
-}
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch(item.getItemId()) {
-//            case R.id.action_logout:
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(this, MainActivity.class));
-//                finish();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {

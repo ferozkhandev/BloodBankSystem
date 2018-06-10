@@ -21,14 +21,33 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:id="@+id/selectCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/iron"
+        android:text="Select Country" />
+
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/country_names"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="75dp"
         android:background="@drawable/spinner_shape" />
+
+    <TextView
+        android:id="@+id/selectCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:textColor="@color/iron"
+        android:text="Select City" />
+
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/city_names"
         android:layout_width="match_parent"
@@ -38,16 +57,33 @@
         android:layout_marginTop="140dp"
         android:background="@drawable/spinner_shape" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="185dp"
+        android:textColor="@color/iron"
+        android:text="Select Blood Group" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/bloodgroup_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="205dp"
+        android:background="@drawable/spinner_shape" />
+
     <Button
         android:id="@+id/btn_next"
 
         android:layout_width="108dp"
         android:layout_height="44dp"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
 
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="195dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="244dp"
+        android:layout_marginEnd="23dp"
         android:background="@drawable/button_shape"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
@@ -56,4 +92,5 @@
         android:text="Next"
         android:textColor="#FFFFFF"
         android:textSize="25sp" />
+
 </RelativeLayout>

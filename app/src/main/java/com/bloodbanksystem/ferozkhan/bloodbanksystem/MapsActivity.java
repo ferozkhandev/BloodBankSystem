@@ -15,12 +15,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private String longitude;
+    private String longitude,latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        longitude = getIntent().getStringExtra("longitude");
+        latitude = getIntent().getStringExtra("latitude");
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -37,15 +39,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Toast.makeText(getApplicationContext(),"longitude: "+getIntent().getStringExtra("longitude"),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"longitude: "+longitude+", Latitude: "+latitude,Toast.LENGTH_LONG).show();
         //double longitude = Double.parseDouble(getIntent().getStringExtra("longitude"));
         //double latitude = Double.parseDouble(getIntent().getStringExtra("latitude"));
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(34, 34);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng patientLocation = new LatLng(Double.parseDouble(longitude), Double.parseDouble(latitude));
+        mMap.addMarker(new MarkerOptions().position(patientLocation).title("Patient Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(patientLocation,15));
     }
 }

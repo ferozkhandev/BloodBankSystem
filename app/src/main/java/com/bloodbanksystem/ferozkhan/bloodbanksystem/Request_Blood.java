@@ -2,7 +2,12 @@ package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -38,6 +43,7 @@ public class Request_Blood extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Button btn_Request;
     private String longitude,latitude;
+    private Location location = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,13 @@ public class Request_Blood extends AppCompatActivity {
         bloodgroup = findViewById(R.id.d_blood_group);
         btn_Request = findViewById(R.id.requestBlood);
         profilePic = findViewById(R.id.donor_profile_photo);
+
+        checkUserPermsions();
+        if(location != null)
+        {
+            longitude = String.valueOf(location.getLongitude());
+            latitude = String.valueOf(location.getLatitude());
+        }
         /*MyLocationClass myLocationClass = new MyLocationClass();
         if(myLocationClass.location.getLongitude() != 0 && myLocationClass.location.getLatitude() != 0)
         {
@@ -65,8 +78,6 @@ public class Request_Blood extends AppCompatActivity {
             longitude = String.valueOf(myLocationClass.location.getLongitude());
             latitude = String.valueOf(myLocationClass.location.getLatitude());
         }*/
-        longitude = "21.0";
-        latitude = "31.0";
         firebaseAuth = FirebaseAuth.getInstance();
         //User ID
         mCrrentID = FirebaseAuth.getInstance().getUid();
@@ -117,6 +128,14 @@ public class Request_Blood extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Request Sent",Toast.LENGTH_SHORT).show();
                         }
                     });
+                    /*notificationMessage.remove("Message");
+                    notificationMessage.remove("from");
+                    firebaseFirestore.collection("Users/"+user_id+"/Requests/"+mCrrentID).add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(getApplicationContext(),"Done",Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
                 }
             }
         });
@@ -138,6 +157,66 @@ public class Request_Blood extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 }, 4000);
+    }
+
+    //access to permsions
+    void checkUserPermsions(){
+        if ( Build.VERSION.SDK_INT >= 23){
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED  ){
+                requestPermissions(new String[]{
+                                android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_CODE_ASK_PERMISSIONS);
+                return ;
+            }
+        }
+
+        getLocation();// init the contact list
+
+    }
+    //get acces to location permsion
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();// init the contact list
+                } else {
+                    // Permission Denied
+                    Toast.makeText( this,"Location Permission Denied" , Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public void getLocation()
+    {
+        LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        try
+        {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        catch (SecurityException ex)
+        {
+            Toast.makeText(getApplicationContext(),ex.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        /*MyLocationClass myLocationClass = new MyLocationClass(this);
+        LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        try
+        {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3000,10,myLocationClass);
+        }
+        catch (SecurityException ex)
+        {
+            Toast.makeText(getApplicationContext(),ex.getMessage(),Toast.LENGTH_SHORT).show();
+        }*/
     }
 
     @Override

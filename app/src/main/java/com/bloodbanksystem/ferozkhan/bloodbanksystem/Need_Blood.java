@@ -19,10 +19,9 @@ import java.util.Collections;
 import java.util.Locale;
 
 public class Need_Blood extends AppCompatActivity {
-    private Locale[] locale;
-    private ArrayList<String> countries;
-    private String country;
     private Button btn_next;
+    private int counter = 0;
+    private String bloodGroup, city;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,20 +31,13 @@ public class Need_Blood extends AppCompatActivity {
 
         btn_next = findViewById(R.id.btn_next);
 
-        locale = Locale.getAvailableLocales();
-        countries = new ArrayList<String>();
-        countries.add("");
-        for( Locale loc : locale ){
-            country = loc.getDisplayCountry();
-            if( country.length() > 0 && !countries.contains(country) ){
-                countries.add( country );
-            }
-        }
-        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
-        final Spinner citizenship = (Spinner)findViewById(R.id.country_names);
+        final Spinner citizenship = findViewById(R.id.country_names);
+        String[] countries = getResources().getStringArray(R.array.countries);
+        Arrays.sort(countries);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, countries);
         citizenship.setAdapter(adapter);
+        citizenship.setSelection(counter);
 
         citizenship.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -59,13 +51,6 @@ public class Need_Blood extends AppCompatActivity {
                             android.R.layout.simple_spinner_item,cities);
                     city.setAdapter(adapter);
                     city.setSelection(0);
-                    btn_next.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(Need_Blood.this,Donors_List.class);
-                            startActivity(intent);
-                        }
-                    });
                 }
                 else
                 {
@@ -76,6 +61,40 @@ public class Need_Blood extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        final Spinner spinner = findViewById(R.id.bloodgroup_spinner);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+                R.array.blood_group, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                try
+                {
+                    bloodGroup = spinner.getSelectedItem().toString();
+                }
+                catch (Exception ex)
+                {
+                    Toast.makeText(getApplicationContext(),"Error: "+ex.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinner.setAdapter(adapter1);
+        spinner.setSelection(0);
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Need_Blood.this,Donors_List.class);
+                intent.putExtra("bloodgroup",bloodGroup);
+                startActivity(intent);
             }
         });
     }

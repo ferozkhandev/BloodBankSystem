@@ -11,6 +11,11 @@
         <item>O+</item>
         <item>O-</item>
     </string-array>
+    <string-array name="countries">
+        <item>India</item>
+        <item>Pakistan</item>
+        <item>Bangladesh</item>
+    </string-array>
     <string-array name="cities">
         <item>Rawalpindi</item>
         <item>Peshawar</item>

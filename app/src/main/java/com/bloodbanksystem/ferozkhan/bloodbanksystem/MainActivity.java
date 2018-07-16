@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Intent logged = new Intent(MainActivity.this, Home_Page.class);
                                     startActivity(logged);
-                                    MainActivity.this.finish();
                                     }
-                                    });
+                            });
+
                         }
                         else
                         {
@@ -121,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 }, 3000);
     }
     public void onLoginSuccess() {
-        btn_login.setEnabled(false);
+        btn_login.setEnabled(true);
+        MainActivity.this.finish();
     }
 
     public void onLoginFailed() {

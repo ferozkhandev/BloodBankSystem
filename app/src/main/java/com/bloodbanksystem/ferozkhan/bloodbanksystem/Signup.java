@@ -233,9 +233,9 @@ public class Signup extends AppCompatActivity{
                                                 public void onSuccess(Void aVoid) {
                                                     Intent intent = new Intent(Signup.this, Home_Page.class);
                                                     startActivity(intent);
-                                                    finish();
                                                 }
                                             });
+                                            Signup.this.finish();
                                             Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
                                         }
                                         else
@@ -247,9 +247,11 @@ public class Signup extends AppCompatActivity{
                             }
                             else
                             {
+                                String token_ID = FirebaseInstanceId.getInstance().getToken();
                                 Map<String,Object> map = new HashMap();
                                 map.put("Name",name);
                                 map.put("Email", emails);
+                                map.put("Token_ID",token_ID);
                                 map.put("Password", passwords);
                                 map.put("Blood_Group",bloodGroup);
                                 firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -257,9 +259,9 @@ public class Signup extends AppCompatActivity{
                                     public void onSuccess(Void aVoid) {
                                         Intent intent = new Intent(Signup.this, Home_Page.class);
                                         startActivity(intent);
-                                        finish();
                                     }
                                 });
+                                Signup.this.finish();
                                 Toast.makeText(getApplicationContext(),"Registered Successfully",Toast.LENGTH_SHORT).show();
                             }
 
@@ -279,7 +281,7 @@ public class Signup extends AppCompatActivity{
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 5000);
     }
 
 

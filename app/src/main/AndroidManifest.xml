@@ -68,7 +68,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".Donate_Blood"></activity>
+        <activity android:name=".Requesters_List"></activity>
     </application>
 
 </manifest>

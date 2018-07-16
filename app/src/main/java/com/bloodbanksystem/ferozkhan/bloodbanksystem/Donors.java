@@ -6,6 +6,7 @@ public class Donors {
     private String email;
     private String image;
     private String bloodGroup;
+    private String locLat,locLong;
     public Donors()
     {
         this.name = null;
@@ -13,6 +14,8 @@ public class Donors {
         this.image = null;
         this.uuid = null;
         this.bloodGroup = null;
+        this.locLat = null;
+        this.locLong = null;
     }
     public Donors(String uuid)
     {
@@ -20,6 +23,8 @@ public class Donors {
         this.name = null;
         this.email = null;
         this.image = null;
+        this.locLat = null;
+        this.locLong = null;
     }
     public Donors(String uuid, String name)
     {
@@ -28,6 +33,8 @@ public class Donors {
         this.bloodGroup = null;
         this.email = null;
         this.image = null;
+        this.locLat = null;
+        this.locLong = null;
     }
     public Donors(String uuid, String name,String bloodGroup)
     {
@@ -36,6 +43,8 @@ public class Donors {
         this.bloodGroup = bloodGroup;
         this.email = null;
         this.image = null;
+        this.locLat = null;
+        this.locLong = null;
     }
     public Donors(String uuid, String name, String bloodGroup, String email)
     {
@@ -44,6 +53,8 @@ public class Donors {
         this.bloodGroup = bloodGroup;
         this.email = email;
         this.image = null;
+        this.locLat = null;
+        this.locLong = null;
     }
     public Donors(String uuid, String name, String bloodGroup, String email, String image)
     {
@@ -52,6 +63,8 @@ public class Donors {
         this.bloodGroup = bloodGroup;
         this.email = email;
         this.image = image;
+        this.locLat = null;
+        this.locLong = null;
     }
 
     public void setName(String name) {
@@ -64,6 +77,14 @@ public class Donors {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setLocLat(String locLat) {
+        this.locLat = locLat;
+    }
+
+    public void setLocLong(String locLong) {
+        this.locLong = locLong;
     }
 
     public void setUuid(String uuid) {
@@ -92,5 +113,13 @@ public class Donors {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getLocLat() {
+        return locLat;
+    }
+
+    public String getLocLong() {
+        return locLong;
     }
 }

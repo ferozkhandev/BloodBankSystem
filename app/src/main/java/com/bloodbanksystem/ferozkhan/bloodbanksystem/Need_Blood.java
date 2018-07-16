@@ -37,23 +37,27 @@ public class Need_Blood extends AppCompatActivity {
         Arrays.sort(countries);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, countries);
         citizenship.setAdapter(adapter);
-        citizenship.setSelection(counter);
+        citizenship.setSelection(0);
 
         citizenship.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (citizenship.getSelectedItem().toString().equals("Pakistan"))
+                boolean counterOnce = true;
+                if (citizenship.getSelectedItem().toString().equals("Pakistan") && counterOnce)
                 {
-                    final Spinner city = (Spinner)findViewById(R.id.city_names);
+                    final Spinner city = findViewById(R.id.city_names);
                     String[] cities = getResources().getStringArray(R.array.cities);
                     Arrays.sort(cities);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
                             android.R.layout.simple_spinner_item,cities);
                     city.setAdapter(adapter);
                     city.setSelection(0);
+                    counter++;
+                    counterOnce = false;
                 }
                 else
                 {
+
                     Toast.makeText(getApplicationContext(),"Sorry, this app is not supported in your region yet.",Toast.LENGTH_LONG).show();
                 }
             }
@@ -74,6 +78,12 @@ public class Need_Blood extends AppCompatActivity {
                 try
                 {
                     bloodGroup = spinner.getSelectedItem().toString();
+                    boolean counterOnce = true;
+                    if(!spinner.getSelectedItem().toString().equals("Select by Blood Group") && counterOnce == true)
+                    {
+                        counter++;
+                        counterOnce = false;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -92,9 +102,16 @@ public class Need_Blood extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Need_Blood.this,Donors_List.class);
-                intent.putExtra("bloodgroup",bloodGroup);
-                startActivity(intent);
+                if(counter<2)
+                {
+                    Toast.makeText(getApplicationContext(),"Please select all inputs carefully.",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Intent intent = new Intent(Need_Blood.this,Donors_List.class);
+                    intent.putExtra("bloodgroup",bloodGroup);
+                    startActivity(intent);
+                }
             }
         });
     }

@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -237,7 +238,8 @@ public class EditProfile extends AppCompatActivity {
                         map.put("Address",addresses);
                         map.put("Contact",contacts);
                         map.put("image",downloadURL);
-                        firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        map.put("Token_ID", FirebaseInstanceId.getInstance().getToken());
+                        firebaseFirestore.collection("Users").document(user_id).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getApplicationContext(),"Edited Successfully",Toast.LENGTH_SHORT).show();
@@ -263,7 +265,8 @@ public class EditProfile extends AppCompatActivity {
             map.put("Blood_Group",bloodGroup);
             map.put("Address",addresses);
             map.put("Contact",contacts);
-            firebaseFirestore.collection("Users").document(user_id).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            map.put("Token_ID",FirebaseInstanceId.getInstance().getToken());
+            firebaseFirestore.collection("Users").document(user_id).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(getApplicationContext(),"Edited Successfully",Toast.LENGTH_SHORT).show();

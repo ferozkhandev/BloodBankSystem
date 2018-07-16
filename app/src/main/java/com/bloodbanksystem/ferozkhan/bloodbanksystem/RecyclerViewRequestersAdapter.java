@@ -6,28 +6,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerViewCustomAdapter.CustomViewHolder>
-{
+public class RecyclerViewRequestersAdapter extends RecyclerView.Adapter<RecyclerViewRequestersAdapter.CustomViewHolder> {
     private Context context;
     private List<Donors> data;
     private String uuid;
-    public RecyclerViewCustomAdapter()
+    public RecyclerViewRequestersAdapter()
     {
 
     }
-    public RecyclerViewCustomAdapter(Context context, List<Donors> data)
+    public RecyclerViewRequestersAdapter(Context context, List<Donors> data)
     {
         this.context = context;
         this.data = data;
@@ -43,10 +38,9 @@ public class RecyclerViewCustomAdapter extends RecyclerView.Adapter<RecyclerView
                 RecyclerView recyclerView = (RecyclerView) view.getParent();
                 CustomViewHolder currentViewHolder = (CustomViewHolder) recyclerView.getChildViewHolder(view);
                 int currentPosition = currentViewHolder.getAdapterPosition();
-                Intent intent = new Intent(context,Request_Blood.class);
-                intent.putExtra("name",data.get(currentPosition).getName());
-                intent.putExtra("UUID",data.get(currentPosition).getUuid());
-                intent.putExtra("bloodgroup",data.get(currentPosition).getBloodGroup());
+                Intent intent = new Intent(context,MapsActivity.class);
+                intent.putExtra("longitude",data.get(currentPosition).getLocLong());
+                intent.putExtra("latitude",data.get(currentPosition).getLocLat());
                 context.startActivity(intent);
             }
         });

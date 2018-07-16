@@ -1,36 +1,19 @@
 package com.bloodbanksystem.ferozkhan.bloodbanksystem;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -38,16 +21,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class Donors_List extends AppCompatActivity {
+public class Requesters_List extends AppCompatActivity {
+
     private static final String TAG = "UserList" ;
     private FirebaseFirestore userlistFirestore,emailFirestore;
     private List<Donors> usernamelist;
+    private List<String> uuidCollection;
     private ArrayAdapter arrayAdapter;
     private Context context;
     private FirebaseAuth firebaseAuth;
@@ -56,20 +41,24 @@ public class Donors_List extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private String cBloodgroup,userID;
     private RecyclerViewCustomAdapter recyclerViewCustomAdapter;
+    private boolean uuidExist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_donors__list);
+        setContentView(R.layout.activity_requesters__list);
         userlistFirestore = FirebaseFirestore.getInstance();
         emailFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        donorsList = findViewById(R.id.donors_recycler_view);
-        emptyView = findViewById(R.id.empty_view);
-        userID = firebaseAuth.getUid();
+        userID = firebaseAuth.getCurrentUser().getUid();
+        donorsList = findViewById(R.id.donateblood_recycler_view);
+        emptyView = findViewById(R.id.donateblood_empty_view);
 
+        uuidExist = false;
         usernamelist = new ArrayList<Donors>();
-        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(Donors_List.this,usernamelist);
+        recyclerViewCustomAdapter = new RecyclerViewCustomAdapter(Requesters_List.this,usernamelist);
 
+        uuidCollection = new ArrayList<String>();
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         donorsList.setHasFixedSize(true);
@@ -84,53 +73,68 @@ public class Donors_List extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        userlistFirestore.collection("Users").addSnapshotListener(Donors_List.this,new EventListener<QuerySnapshot>() {
+        usernamelist.clear();
+        userlistFirestore.collection("Users").document(userID).collection("Notifications").addSnapshotListener(Requesters_List.this,new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                usernamelist.clear();
                 for(DocumentChange doc: queryDocumentSnapshots.getDocumentChanges())
                 {
                     if(doc.getType() == DocumentChange.Type.ADDED)
                     {
-                        recyclerViewCustomAdapter.notifyDataSetChanged();
-                        //Donors donors = doc.getDocument().toObject(Donors.class);
-                        String uuid = doc.getDocument().getId();
-                        String name = doc.getDocument().getData().get("Name").toString();
-                        String bloodGroup = doc.getDocument().getData().get("Blood_Group").toString();
-                        String email = doc.getDocument().getData().get("Email").toString();
-                        String image = null;
-                        try
+                        //recyclerViewCustomAdapter.notifyDataSetChanged();
+                        Donors donors = doc.getDocument().toObject(Donors.class);
+                        String uid = doc .getDocument().getData().get("from").toString();
+
+                        if(uuidCollection.contains(uid))
                         {
-                            image = doc.getDocument().getData().get("image").toString();
-                        }
-                        catch (Exception ex)
-                        {
-                            //Toast.makeText(getApplicationContext(),ex.getMessage(),Toast.LENGTH_LONG).show();
-                        }
-                        Donors donors1;
-                        if(image != null)
-                        {
-                            donors1 = new Donors(uuid,name,bloodGroup, email,image);
+                            continue;
                         }
                         else
                         {
-                            donors1 = new Donors(uuid,name, bloodGroup,email);
+                            listRequesters(uid);
                         }
-                        if(!firebaseAuth.getCurrentUser().getEmail().equals(email) && getIntent().getStringExtra("bloodgroup").equals(bloodGroup))
-                        {
-                            usernamelist.add(donors1);
-                        }
+                        uuidCollection.add(uid);
                     }
                 }
-                if (usernamelist.isEmpty()) {
-                    donorsList.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
-                    Toast.makeText(getApplicationContext(),"No Donor available there",Toast.LENGTH_SHORT).show();
+            }
+        });
+        if (usernamelist.isEmpty())
+        {
+            donorsList.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(),"No Donor available there",Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            donorsList.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+    }
+
+    public void listRequesters(final String uuid)
+    {
+        userlistFirestore.collection("Users").document(uuid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                String bloodGroup = documentSnapshot.getString("Blood_Group");
+                String email = documentSnapshot.getString("Email");
+                String name = documentSnapshot.getString("Name");
+                String image = null;
+                try {
+                    image = documentSnapshot.getString("image");
+                } catch (Exception ex) {
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                else {
-                    donorsList.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
+                Donors donors1;
+                if (image != null) {
+                    donors1 = new Donors(uuid, name, bloodGroup, email, image);
+                } else {
+                    donors1 = new Donors(uuid, name, bloodGroup, email);
                 }
+                //if (!firebaseAuth.getCurrentUser().getEmail().equals(email)) {
+                    usernamelist.add(donors1);
+                //}
             }
         });
     }
